@@ -3,7 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
 const busboy = require('connect-busboy');
-const busboyBodyParser = require('busboy-body-parser')
+const busboyBodyParser = require('busboy-body-parser');
 require('./database');
 
 // MIDDLEWARES
