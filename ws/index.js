@@ -19,6 +19,7 @@ app.set('port', 8000);
 
 //ROTAS
 app.use('/salao', require('./src/routes/salao.routes'));
+app.use('/servico', require('./src/routes/servico.routes'));
 
 app.listen(app.get('port'), () => {
     console.log(`JM Escultando na porta ${app.get('port')}`);
