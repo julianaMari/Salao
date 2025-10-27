@@ -116,6 +116,31 @@ router.put('/:id', async (req, res) => {
 // req.pipe(busboy);    
 });
 
+router.get('/salao/:salaoId', async (req, res) => {
+    try {
+        let servicosSalao = [];
+        const servicos = await Servico.find({
+            salaoId: req.params.salaoId,
+            status: { $ne: 'E' },
+        });
+
+        for (let servico of servicos) {
+            const arquivos = await Arquivo.find({
+                model: 'Servico',
+                referenciaId: servico._id
+            });
+            servicosSalao.push({ ...servico._doc, arquivos });
+        }
+
+        res.json({
+            servicos: servicosSalao,
+        });
+
+    } catch (err) {
+        res.json({ error: true, message: err.message })
+    }
+})
+
 router.post('/delete-arquivo', async (req, res) => {
     try {
         const { id } = req.body;
@@ -125,6 +150,22 @@ router.post('/delete-arquivo', async (req, res) => {
         await Arquivo.findOneAndDelete({
             caminho: id,
         });
+        
+        res.json({ error: false });
+
+    } catch (err) {
+        console.error('Erro na rota POST /servico:', err.message); 
+            res.status(500).json({ 
+                error: true, 
+                message: err.message 
+            });
+        }
+})
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Servico.findByIdAndUpdate(id, { status: 'E' });
         
         res.json({ error: false });
 
