@@ -116,6 +116,31 @@ router.put('/:id', async (req, res) => {
 // req.pipe(busboy);    
 });
 
+router.get('/salao/:salaoId', async (req, res) => {
+    try {
+        let servicosSalao = [];
+        const servicos = await Servico.find({
+            salaoId: req.params.salaoId,
+            status: { $ne: 'E' },
+        });
+
+        for (let servico of servicos) {
+            const arquivos = await Arquivo.find({
+                model: 'Servico',
+                referenciaId: servico._id
+            });
+            servicosSalao.push({ ...servico._doc, arquivos });
+        }
+
+        res.json({
+            servicos: servicosSalao,
+        });
+
+    } catch (err) {
+        res.json({ error: true, message: err.message })
+    }
+})
+
 router.post('/delete-arquivo', async (req, res) => {
     try {
         const { id } = req.body;
