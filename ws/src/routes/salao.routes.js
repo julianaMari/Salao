@@ -17,19 +17,30 @@ router.post('/', async (req, res) => {
 router.get('/servicos/:salaoId', async (req, res) => {
     try{   
         const { salaoId } = req.params; 
-        const { servicos } = await Servico.find({
+        const servicos = await Servico.find({
             salaoId,
-            status: 'A'
+            status: 'A',
         }).select('_id titulo');
 
         /* [{ label: 'Serviço', value: '123456'  }] */
         res.json({
-            servicos: servicos.map(s => ({ label: s.titulo, value: s._id }))
+            servicos: servicos.map((s) => ({ label: s.titulo, value: s._id })),
         });
 
     } catch (err) {
        res.json({ error: true, message: err.message })
 
+    }
+});
+
+router.get('/id', async (req, res) => {
+    try {
+        const salao = await Salao.findById(req.params.id).select(
+            'capa nome enderco.cidade'
+            );
+
+    } catch (err) {
+        res.json({ error: true, message: err.message });
     }
 });
 
