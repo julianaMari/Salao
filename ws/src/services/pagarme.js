@@ -12,7 +12,7 @@ module.exports = async ( endpoint, data ) => {
             api_key,
             ...data,
         });
-        return { error: false, data: response.data };
+        return { error: false, data: response.data.data };
     } catch (err) {
         return {
             error: true,
